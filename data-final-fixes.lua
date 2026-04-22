@@ -27,8 +27,48 @@ data:extend{road_tile_list}
 local place_as_tile_condition = {"water-tile"}
 
 if mods["space-exploration"] then
-  table.insert(place_as_tile_condition, spaceship_collision_layer)
-  table.insert(place_as_tile_condition, empty_space_collision_layer)
+  local collision_mask_util = require("collision-mask-util")
+
+local function set_from_se_tiles()
+  local tiles = data.raw.tile
+  if not tiles then return nil, nil end
+
+  -- candidates: these names vary a bit by SE version; this is intentionally fuzzy
+  local empty_space_tile
+  local spaceship_floor_tile
+
+  for name, tile in pairs(tiles) do
+    if name:find("empty", 1, true) and name:find("space", 1, true) then
+      empty_space_tile = empty_space_tile or tile
+    end
+    if name:find("spaceship", 1, true) and (name:find("floor", 1, true) or name:find("tile", 1, true)) then
+      spaceship_floor_tile = spaceship_floor_tile or tile
+    end
+  end
+
+  local function pick_unique_layer(tile, fallback)
+    if not tile then return fallback end
+    local mask = collision_mask_util.get_mask(tile)
+    if not mask then return fallback end
+
+    -- Heuristic: return the first layer that looks SE-specific.
+    -- (Vanilla layers are things like "water-tile", "ground-tile", "resource-layer", etc.)
+    for _, layer in pairs(mask) do
+      if type(layer) == "string" and (layer:find("spaceship", 1, true) or layer:find("space", 1, true)) then
+        return layer
+      end
+    end
+
+    return fallback
+  end
+
+  local empty_space_layer = pick_unique_layer(empty_space_tile, nil)
+  local spaceship_layer    = pick_unique_layer(spaceship_floor_tile, nil)
+
+  return spaceship_layer, empty_space_layer
+end
+
+local spaceship_collision_layer, empty_space_collision_layer = set_from_se_tiles()
 end
 
 local process_road_item = function(item)

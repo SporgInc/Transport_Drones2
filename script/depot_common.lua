@@ -52,7 +52,7 @@ local script_data =
   update_buckets = {},
   reset_to_be_taken_again = true,
   refresh_techs = true,
-  update_rate = 60,
+  update_rate = settings.global["transport-depot-update-interval"] and settings.global["transport-depot-update-interval"].value or 60,
   reset_fuel_on_the_way = true
 }
 

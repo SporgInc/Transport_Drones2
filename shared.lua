@@ -2,7 +2,7 @@
 
 local data = {}
 
-data.drone_collision_mask = {"poop your pants"}
+data.drone_collision_mask = {"ground-tile", "water-tile", "not-colliding-with-itself", "colliding-with-tiles-only"}
 --data.drone_collision_mask = {"ground-tile", "water-tile", "not-colliding-with-itself", "colliding-with-tiles-only"}
 --data.drone_collision_mask = {"ground-tile", "water-tile"}
 data.variation_count = 50

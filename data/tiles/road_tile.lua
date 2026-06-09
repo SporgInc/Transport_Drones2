@@ -10,6 +10,30 @@ tile.placeable_by = {{item = "road", count = 1}}
 tile.map_color={r=86/2, g=82/2, b=74/2}
 tile.walking_speed_modifier = 1.5
 tile.vehicle_friction_modifier = 0.9
+tile.transitions = nil
+tile.transitions_between_transitions = nil
+-- Keep stone-path overlay sprites (stone-brick look) but add concrete's hard-edge mask
+-- so the boundary clips sharply instead of alpha-fading.
+if tile.variants and tile.variants.transition then
+  local ol = tile.variants.transition.overlay_layout
+  -- Crop overlay sprites to tile_height=1 so they align with the 1-tile-tall concrete mask PNGs.
+  -- Stone-path overlays default to tile_height=2; reading them as tile_height=1 uses only the
+  -- lower tile row, which contains the actual stone edge texture.
+  if ol then
+    if ol.inner_corner then ol.inner_corner.tile_height = 1 end
+    if ol.outer_corner then ol.outer_corner.tile_height = 1 end
+    if ol.side         then ol.side.tile_height         = 1 end
+    if ol.u_transition then ol.u_transition.tile_height = 1 end
+  end
+  -- mask_layout uses concrete's hard-edge shape (no tile_height needed, defaults to 1)
+  tile.variants.transition.mask_layout = {
+    inner_corner  = {spritesheet = "__base__/graphics/terrain/concrete/concrete-inner-corner-mask.png",  count = 16, scale = 0.5},
+    outer_corner  = {spritesheet = "__base__/graphics/terrain/concrete/concrete-outer-corner-mask.png",  count = 8,  scale = 0.5},
+    side          = {spritesheet = "__base__/graphics/terrain/concrete/concrete-side-mask.png",           count = 16, scale = 0.5},
+    u_transition  = {spritesheet = "__base__/graphics/terrain/concrete/concrete-u-mask.png",              count = 8,  scale = 0.5},
+    o_transition  = {spritesheet = "__base__/graphics/terrain/concrete/concrete-o-mask.png",              count = 4,  scale = 0.5},
+  }
+end
 
 
 local item =
@@ -49,6 +73,9 @@ better_tile.placeable_by = {{item = "fast-road", count = 1}}
 better_tile.map_color={r=86/2, g=82/2, b=74/2}
 better_tile.walking_speed_modifier = 2
 better_tile.vehicle_friction_modifier = 0.8
+better_tile.transitions = nil
+better_tile.transitions_between_transitions = nil
+-- refined-concrete already uses mask-based concrete sprites; no variants changes needed
 
 local better_item =
 {

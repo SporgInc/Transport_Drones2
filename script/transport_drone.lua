@@ -544,7 +544,7 @@ end
 local random = math.random
 function transport_drone:wait_for_reorder()
   self.state = states.waiting_for_reorder
-  self.entity.set_command
+  self.entity.commandable.set_command
   {
     type = defines.command.stop,
     ticks_to_wait = random(20, 30),
@@ -610,7 +610,7 @@ function transport_drone:say(text)
 end
 
 function transport_drone:go_to_position(position, radius)
-  self.entity.set_command
+  self.entity.commandable.set_command
   {
     type = defines.command.go_to_location,
     destination = position,
@@ -621,7 +621,7 @@ function transport_drone:go_to_position(position, radius)
 end
 
 function transport_drone:go_to_entity(entity, radius)
-  self.entity.set_command
+  self.entity.commandable.set_command
   {
     type = defines.command.go_to_location,
     destination_entity = entity,
@@ -681,7 +681,7 @@ function transport_drone:go_to_depot(depot, radius, sprite_switch)
     ticks_to_wait = 15
   })
 
-  self.entity.set_command
+  self.entity.commandable.set_command
   {
     type = defines.command.compound,
     distraction = defines.distraction.none,

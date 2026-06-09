@@ -92,36 +92,39 @@ depot.energy_source =
 }
 depot.placeable_by = {item = "request-depot", count = 1}
 
-depot.animation =
+depot.graphics_set =
 {
-  north =
+  animation =
   {
-    layers =
+    north =
     {
-      request_base{0, 0.4},
-    }
-  },
-  south =
-  {
-    layers =
+      layers =
+      {
+        request_base{0, 0.4},
+      }
+    },
+    south =
     {
-      request_base{0, 0.4},
-    }
-  },
-  east =
-  {
-    layers =
+      layers =
+      {
+        request_base{0, 0.4},
+      }
+    },
+    east =
     {
-      request_base{0, 0.4},
-    }
-  },
-  west =
-  {
-    layers =
+      layers =
+      {
+        request_base{0, 0.4},
+      }
+    },
+    west =
     {
-      request_base{0, 0.4},
-    }
-  },
+      layers =
+      {
+        request_base{0, 0.4},
+      }
+    },
+  }
 }
 
 local supply_depot = util.copy(depot)
@@ -155,36 +158,39 @@ local supply_base = function(shift)
   }
 end
 
-supply_depot.animation =
+supply_depot.graphics_set =
 {
-  north =
+  animation =
   {
-    layers =
+    north =
     {
-      supply_base{0, 0.4},
-    }
-  },
-  south =
-  {
-    layers =
+      layers =
+      {
+        supply_base{0, 0.4},
+      }
+    },
+    south =
     {
-      supply_base{0, 0.4},
-    }
-  },
-  east =
-  {
-    layers =
+      layers =
+      {
+        supply_base{0, 0.4},
+      }
+    },
+    east =
     {
-      supply_base{0, 0.4},
-    }
-  },
-  west =
-  {
-    layers =
+      layers =
+      {
+        supply_base{0, 0.4},
+      }
+    },
+    west =
     {
-      supply_base{0, 0.4},
-    }
-  },
+      layers =
+      {
+        supply_base{0, 0.4},
+      }
+    },
+  }
 }
 
 local caution_corpse =
@@ -343,36 +349,39 @@ local fuel_base = function(shift)
   }
 end
 
-fuel_depot.animation =
+fuel_depot.graphics_set =
 {
-  north =
+  animation =
   {
-    layers =
+    north =
     {
-      fuel_base(),
-    }
-  },
-  south =
-  {
-    layers =
+      layers =
+      {
+        fuel_base(),
+      }
+    },
+    south =
     {
-      fuel_base(),
-    }
-  },
-  east =
-  {
-    layers =
+      layers =
+      {
+        fuel_base(),
+      }
+    },
+    east =
     {
-      fuel_base(),
-    }
-  },
-  west =
-  {
-    layers =
+      layers =
+      {
+        fuel_base(),
+      }
+    },
+    west =
     {
-      fuel_base(),
-    }
-  },
+      layers =
+      {
+        fuel_base(),
+      }
+    },
+  }
 }
 
 local fuel_depot_items =
@@ -563,35 +572,38 @@ local buffer_base = function(shift)
   }
 end
 
-buffer_depot.animation =
+buffer_depot.graphics_set =
 {
-  north =
+  animation =
   {
-    layers =
+    north =
     {
-      buffer_base{0, 0.4},
-    }
-  },
-  south =
-  {
-    layers =
+      layers =
+      {
+        buffer_base{0, 0.4},
+      }
+    },
+    south =
     {
-      buffer_base{0, 0.4},
-    }
-  },
-  east =
-  {
-    layers =
+      layers =
+      {
+        buffer_base{0, 0.4},
+      }
+    },
+    east =
     {
-      buffer_base{0, 0.4},
-    }
-  },
-  west =
-  {
-    layers =
+      layers =
+      {
+        buffer_base{0, 0.4},
+      }
+    },
+    west =
     {
-      buffer_base{0, 0.4},
-    }
+      layers =
+      {
+        buffer_base{0, 0.4},
+      }
+    },
   }
 }
 

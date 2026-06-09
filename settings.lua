@@ -11,14 +11,6 @@ local settings =
   },
 
   {
-    type = "string-setting",
-    name = "fuel-fluid",
-    localised_name = "Transport drone fuel",
-    setting_type = "startup",
-    default_value = "petroleum-gas"
-  },
-
-  {
     type = "double-setting",
     name = "fuel-amount-per-drone",
     localised_name = "Transport drone fuel per drone",

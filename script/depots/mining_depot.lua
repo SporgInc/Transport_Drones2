@@ -3,10 +3,10 @@ mining_depot.metatable = {__index = mining_depot}
 
 mining_depot.corpse_offsets =
 {
-  [0] = {0, 4.5},
-  [2] = {-4.5, 0},
-  [4] = {0, -4.5},
-  [6] = {4.5, 0},
+  [0]={0,4.5},  [1]={0,4.5},  [2]={0,4.5},  [3]={0,4.5},
+  [4]={-4.5,0}, [5]={-4.5,0}, [6]={-4.5,0}, [7]={-4.5,0},
+  [8]={0,-4.5}, [9]={0,-4.5}, [10]={0,-4.5},[11]={0,-4.5},
+  [12]={4.5,0}, [13]={4.5,0}, [14]={4.5,0}, [15]={4.5,0},
 }
 
 local get_corpse_position = function(entity)
@@ -70,7 +70,11 @@ function mining_depot:update_contents()
     end
   end
   if not new_contents then
-    new_contents = self.entity.get_output_inventory().get_contents()
+    local raw = self.entity.get_output_inventory().get_contents()
+    new_contents = {}
+    for _, item in pairs(raw) do
+      new_contents[item.name] = (new_contents[item.name] or 0) + item.count
+    end
   end
 
   for name, count in pairs (self.old_contents) do
@@ -100,7 +104,15 @@ function mining_depot:update_contents()
 
   if self.circuit_reader and self.circuit_reader.valid then
     local behavior = self.circuit_reader.get_or_create_control_behavior()
-    local name, count = next(new_contents) or next(self.entity.get_output_inventory().get_contents())
+    local signal_contents = new_contents
+    if not next(signal_contents) then
+      local raw = self.entity.get_output_inventory().get_contents()
+      signal_contents = {}
+      for _, item in pairs(raw) do
+        signal_contents[item.name] = (signal_contents[item.name] or 0) + item.count
+      end
+    end
+    local name, count = next(signal_contents)
     local signal
     if name and count and count > 0 then
       signal = {signal = {type = "item", name = name}, count = count}

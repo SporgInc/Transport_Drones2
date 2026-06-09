@@ -2,9 +2,7 @@
 
 local data = {}
 
-data.drone_collision_mask = {"ground-tile", "water-tile", "not-colliding-with-itself", "colliding-with-tiles-only"}
---data.drone_collision_mask = {"ground-tile", "water-tile", "not-colliding-with-itself", "colliding-with-tiles-only"}
---data.drone_collision_mask = {"ground-tile", "water-tile"}
+data.drone_collision_mask = {layers = {["ground-tile"] = true, ["water-tile"] = true}, not_colliding_with_itself = true, colliding_with_tiles_only = true}
 data.variation_count = 50
 data.special_variation_count = 10
 data.transport_speed_technology = "transport-drone-speed"

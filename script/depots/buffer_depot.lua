@@ -8,10 +8,10 @@ buffer_depot.metatable = {__index = buffer_depot}
 
 buffer_depot.corpse_offsets =
 {
-  [0] = {0, -2},
-  [2] = {2, 0},
-  [4] = {0, 2},
-  [6] = {-2, 0},
+  [0]={0,-2}, [1]={0,-2}, [2]={0,-2}, [3]={0,-2},
+  [4]={2,0},  [5]={2,0},  [6]={2,0},  [7]={2,0},
+  [8]={0,2},  [9]={0,2},  [10]={0,2}, [11]={0,2},
+  [12]={-2,0},[13]={-2,0},[14]={-2,0},[15]={-2,0},
 }
 
 buffer_depot.is_buffer_depot = true
@@ -21,7 +21,7 @@ local get_fuel_fluid = function()
   if fuel_fluid then
     return fuel_fluid
   end
-  fuel_fluid = game.recipe_prototypes["fuel-depots"].products[1].name
+  fuel_fluid = prototypes.recipe["fuel-depots"].products[1].name
   return fuel_fluid
 end
 
@@ -383,7 +383,7 @@ local stack_cache = {}
 local get_stack_size = function(item)
   local size = stack_cache[item]
   if not size then
-    size = game.item_prototypes[item].stack_size
+    size = prototypes.item[item].stack_size
     stack_cache[item] = size
   end
   return size
@@ -503,13 +503,13 @@ end
 local min = math.min
 function buffer_depot:give_item(requested_name, requested_count)
 
-  if game.item_prototypes[requested_name] then
+  if prototypes.item[requested_name] then
     local inventory = self.entity.get_output_inventory()
     local removed_count = inventory.remove({name = requested_name, count = requested_count})
     return removed_count
   end
 
-  if game.fluid_prototypes[requested_name] then
+  if prototypes.fluid[requested_name] then
     local box = self:get_output_fluidbox()
     if not box then
       return 0
@@ -536,7 +536,7 @@ local is_valid_item = function(item_name)
   if bool ~= nil then
     return bool
   end
-  valid_item_cache[item_name] = game.item_prototypes[item_name] ~= nil
+  valid_item_cache[item_name] = prototypes.item[item_name] ~= nil
   return valid_item_cache[item_name]
 end
 
@@ -546,7 +546,7 @@ local is_valid_fluid = function(fluid_name)
   if bool ~= nil then
     return bool
   end
-  valid_fluid_cache[fluid_name] = game.fluid_prototypes[fluid_name] ~= nil
+  valid_fluid_cache[fluid_name] = prototypes.fluid[fluid_name] ~= nil
   return valid_fluid_cache[fluid_name]
 end
 
@@ -598,15 +598,15 @@ end
 function buffer_depot:update_sticker()
 
   if not self.item then
-    if self.rendering and rendering.is_valid(self.rendering) then
-      rendering.destroy(self.rendering)
+    if self.rendering and self.rendering.valid then
+      self.rendering:destroy()
       self.rendering = nil
     end
     return
   end
 
-  if self.rendering and rendering.is_valid(self.rendering) then
-    rendering.set_text(self.rendering, self:get_active_drone_count().."/"..self:get_drone_item_count())
+  if self.rendering and self.rendering.valid then
+    self.rendering.text = self:get_active_drone_count().."/"..self:get_drone_item_count()
     return
   end
 
@@ -616,7 +616,6 @@ function buffer_depot:update_sticker()
     target = self.entity,
     text = self:get_active_drone_count().."/"..self:get_drone_item_count(),
     only_in_alt_mode = true,
-    forces = {self.entity.force},
     color = {r = 1, g = 1, b = 1},
     alignment = "center",
     scale = 1.5

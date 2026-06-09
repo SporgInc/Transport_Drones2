@@ -1,28 +1,7 @@
-local fuel = settings.startup["fuel-fluid"].value
-if not data.raw.fluid[fuel] then
-  log("Bad name for fuel fluid. reverting to something else...")
-
-  fuel = "petroleum-gas"
-  if not data.raw.fluid[fuel] then
-    fuel = nil
-    for k, fluid in pairs (data.raw.fluid) do
-      if fluid.fuel_value then
-        fuel = fluid.name
-        break
-      end
-    end
-  end
-
-  if not fuel then
-    local index, fluid = next(data.raw.fluid)
-    if fluid then
-      fuel = fluid.name
-    end
-  end
-end
+local fuel = "steam"
 
 local category = "transport-drone-request"
-local util = require("__Transport_Drones__/data/tf_util/tf_util")
+local util = require("__Transport_Drones2__/data/tf_util/tf_util")
 local shared = require("shared")
 
 local recipes = data.raw.recipe
@@ -92,37 +71,6 @@ for k, item_type in pairs(util.item_types()) do
   end
 end
 
-local make_fluid_depot_recipe = function(fluid)
-  data:extend
-  {
-    {
-      type = "recipe",
-      name = "fluid-depot-"..fluid.name,
-      icon = fluid.icon,
-      icon_size = fluid.icon_size,
-      icons = fluid.icons,
-      ingredients =
-      {
-        {type = "fluid", name = fluid.name, amount = 0.0000001}
-      },
-      results =
-      {
-      },
-      category = "transport-fluid-request",
-      order = fluid.order,
-      subgroup = fluid.subgroup or "fluid", --get_subgroup(item),
-      overload_multiplier = 1,
-      hide_from_player_crafting = true,
-      main_product = "",
-      allow_decomposition = false,
-      allow_as_intermediate = false,
-      allow_intermediates = false,
-      enabled = true,
-      energy_required = 2 ^ 50
-    }
-  }
-end
-
 local make_fluid_request_recipe = function(fluid)
 
   local recipe =
@@ -156,7 +104,6 @@ local make_fluid_request_recipe = function(fluid)
 end
 
 for k, fluid in pairs (data.raw.fluid) do
-  make_fluid_depot_recipe(fluid)
   make_fluid_request_recipe(fluid)
 end
 
@@ -165,7 +112,7 @@ local fuel_recipe =
   type = "recipe",
   name = "fuel-depots",
   localised_name = {"fuel-depots"},
-  flags = {"hidden"},
+  hidden = true,
   icon = util.path("data/entities/transport_depot/fuel-recipe-icon.png"),
   icon_size = 64,
   --category = "transport",

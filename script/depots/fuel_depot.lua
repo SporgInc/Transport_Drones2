@@ -7,10 +7,10 @@ fuel_depot.metatable = {__index = fuel_depot}
 
 fuel_depot.corpse_offsets =
 {
-  [0] = {0, -3},
-  [2] = {3, 0},
-  [4] = {0, 3},
-  [6] = {-3, 0},
+  [0]={0,-3}, [1]={0,-3}, [2]={0,-3}, [3]={0,-3},
+  [4]={3,0},  [5]={3,0},  [6]={3,0},  [7]={3,0},
+  [8]={0,3},  [9]={0,3},  [10]={0,3}, [11]={0,3},
+  [12]={-3,0},[13]={-3,0},[14]={-3,0},[15]={-3,0},
 }
 
 local fuel_fluid
@@ -18,7 +18,7 @@ local get_fuel_fluid = function()
   if fuel_fluid then
     return fuel_fluid
   end
-  fuel_fluid = game.recipe_prototypes["fuel-depots"].products[1].name
+  fuel_fluid = prototypes.recipe["fuel-depots"].products[1].name
   return fuel_fluid
 end
 
@@ -204,8 +204,8 @@ end
 
 function fuel_depot:update_sticker()
 
-  if self.rendering and rendering.is_valid(self.rendering) then
-    rendering.set_text(self.rendering, self:get_active_drone_count().."/"..self:get_drone_item_count())
+  if self.rendering and self.rendering.valid then
+    self.rendering.text = self:get_active_drone_count().."/"..self:get_drone_item_count()
     return
   end
 
@@ -215,7 +215,6 @@ function fuel_depot:update_sticker()
     target = self.entity,
     text = self:get_active_drone_count().."/"..self:get_drone_item_count(),
     only_in_alt_mode = true,
-    forces = {self.entity.force},
     color = {r = 1, g = 1, b = 1},
     alignment = "center",
     scale = 2,

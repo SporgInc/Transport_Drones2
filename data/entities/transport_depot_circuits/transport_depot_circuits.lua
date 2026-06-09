@@ -17,10 +17,9 @@ writer.animations = require(util.path("data/entities/transport_depot_circuits/de
 writer.icon = util.path("data/entities/transport_depot_circuits/depot-writer-icon.png")
 writer.icon_mipmaps = 0
 writer.icon_size = 72
-writer.fluid_animations = nil
+writer.fluid_animation = nil
 writer.pumping_speed = 0
-writer.load_connector_animations = nil
-writer.unload_connetor_animations = nil
+writer.fluid_wagon_connector_graphics = nil
 writer.fluid_wagon_connector_frame_count = 0
 writer.collision_box = {{-0.4, -0.4},{0.4, 0.4}}
 writer.selection_box = {{-0.5, -0.5}, {0.5, 0.5}}
@@ -36,11 +35,13 @@ writer.circuit_connector_sprites =
 writer.circuit_wire_connection_points = writer_sprite.circuit_wire_connection_points
 writer.fluid_box =
 {
+  volume = 200,
   pipe_connections =
   {
     {
-      position = {0, 1},
-      type = "output"
+      position = {0, 0},
+      flow_direction = "output",
+      direction = defines.direction.south
     }
   }
 }
@@ -71,11 +72,11 @@ local writer_recipe =
   enabled = false,
   ingredients =
   {
-    {"copper-cable", 5},
-    {"electronic-circuit", 10},
+    {type = "item", name = "copper-cable", amount = 5},
+    {type = "item", name = "electronic-circuit", amount = 10},
   },
   energy_required = 5,
-  result = "transport-depot-writer"
+  results = {{type = "item", name = "transport-depot-writer", amount = 1}}
 }
 
 data:extend
@@ -128,11 +129,11 @@ local reader_recipe =
   enabled = false,
   ingredients =
   {
-    {"copper-cable", 5},
-    {"electronic-circuit", 10},
+    {type = "item", name = "copper-cable", amount = 5},
+    {type = "item", name = "electronic-circuit", amount = 10},
   },
   energy_required = 5,
-  result = "transport-depot-reader"
+  results = {{type = "item", name = "transport-depot-reader", amount = 1}}
 }
 
 data:extend

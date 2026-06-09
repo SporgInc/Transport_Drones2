@@ -2,16 +2,16 @@
 
 local road_network = require("script/road_network")
 
-local road_tile_list_name = "road-tile-list"
 local road_tiles
 local get_road_tiles = function()
   if road_tiles then return road_tiles end
   road_tiles = {}
-  local tile_list_item = game.item_prototypes[road_tile_list_name]
-  for tile_name, prototype in pairs (tile_list_item.tile_filters) do
-    road_tiles[tile_name] = true
+  for name, tile_proto in pairs(prototypes.tile) do
+    local mask = tile_proto.collision_mask
+    if mask and mask.layers and mask.layers["transport-drones2-road"] then
+      road_tiles[name] = true
+    end
   end
-  --game.print(serpent.line(road_tiles))
   return road_tiles
 end
 

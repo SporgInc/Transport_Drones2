@@ -4,18 +4,21 @@ local drone_fluid_capacity = shared.drone_fluid_capacity
 local request_depot = {}
 request_depot.metatable = {__index = request_depot}
 
+-- Factorio 2.0: cardinal directions are 0/4/8/12 (doubled from 1.x).
+-- Non-cardinal entries snap to the floor cardinal so blueprints/scripts
+-- that produce off-axis directions don't crash get_corpse_position.
 request_depot.corpse_offsets =
 {
-  [0] = {0, -2},
-  [2] = {2, 0},
-  [4] = {0, 2},
-  [6] = {-2, 0},
+  [0]={0,-2}, [1]={0,-2}, [2]={0,-2}, [3]={0,-2},   -- north
+  [4]={2,0},  [5]={2,0},  [6]={2,0},  [7]={2,0},    -- east
+  [8]={0,2},  [9]={0,2},  [10]={0,2}, [11]={0,2},   -- south
+  [12]={-2,0},[13]={-2,0},[14]={-2,0},[15]={-2,0},  -- west
 }
 
 local fuel_fluid
 local get_fuel_fluid = function()
   if not fuel_fluid then
-    fuel_fluid = game.recipe_prototypes["fuel-depots"].products[1].name
+    fuel_fluid = prototypes.recipe["fuel-depots"].products[1].name
   end
   return fuel_fluid
 end
@@ -208,6 +211,12 @@ end
 local big = math.huge
 local min = math.min
 local item_heuristic_bonus = 50
+
+function request_depot.score_supply(depot_position, requester_position, available_count, request_size)
+  local amount = min(available_count, request_size)
+  return distance(depot_position, requester_position) - ((amount / request_size) * item_heuristic_bonus)
+end
+
 function request_depot:make_request()
 
   local name = self.item
@@ -230,8 +239,7 @@ function request_depot:make_request()
 
   local node_position = self.node_position
   local heuristic = function(depot, count)
-    local amount = min(count, request_size)
-    return distance(depot.node_position, node_position) - ((amount / request_size) * item_heuristic_bonus)
+    return request_depot.score_supply(depot.node_position, node_position, count, request_size)
   end
 
   local best_buffer
@@ -355,7 +363,7 @@ local stack_cache = {}
 local get_stack_size = function(item)
   local size = stack_cache[item]
   if not size then
-    local prototype = game.item_prototypes[item]
+    local prototype = prototypes.item[item]
     if not prototype then error("what? "..item) end
     size = prototype.stack_size
     stack_cache[item] = size
@@ -517,7 +525,7 @@ local is_valid_item = function(item_name)
   if bool ~= nil then
     return bool
   end
-  valid_item_cache[item_name] = game.item_prototypes[item_name] ~= nil
+  valid_item_cache[item_name] = prototypes.item[item_name] ~= nil
   return valid_item_cache[item_name]
 end
 
@@ -527,7 +535,7 @@ local is_valid_fluid = function(fluid_name)
   if bool ~= nil then
     return bool
   end
-  valid_fluid_cache[fluid_name] = game.fluid_prototypes[fluid_name] ~= nil
+  valid_fluid_cache[fluid_name] = prototypes.fluid[fluid_name] ~= nil
   return valid_fluid_cache[fluid_name]
 end
 
@@ -565,15 +573,15 @@ end
 function request_depot:update_sticker()
 
   if not self.item then
-    if self.rendering and rendering.is_valid(self.rendering) then
-      rendering.destroy(self.rendering)
+    if self.rendering and self.rendering.valid then
+      self.rendering:destroy()
       self.rendering = nil
     end
     return
   end
 
-  if self.rendering and rendering.is_valid(self.rendering) then
-    rendering.set_text(self.rendering, self:get_active_drone_count().."/"..self:get_drone_item_count())
+  if self.rendering and self.rendering.valid then
+    self.rendering.text = self:get_active_drone_count().."/"..self:get_drone_item_count()
     return
   end
 
@@ -583,7 +591,6 @@ function request_depot:update_sticker()
     target = self.entity,
     text = self:get_active_drone_count().."/"..self:get_drone_item_count(),
     only_in_alt_mode = true,
-    forces = {self.entity.force},
     color = {r = 1, g = 1, b = 1},
     alignment = "center",
     scale = 1.5

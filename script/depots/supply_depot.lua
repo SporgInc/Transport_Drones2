@@ -4,10 +4,10 @@ supply_depot.metatable = {__index = supply_depot}
 
 supply_depot.corpse_offsets =
 {
-  [0] = {0, -2},
-  [2] = {2, 0},
-  [4] = {0, 2},
-  [6] = {-2, 0},
+  [0]={0,-2}, [1]={0,-2}, [2]={0,-2}, [3]={0,-2},
+  [4]={2,0},  [5]={2,0},  [6]={2,0},  [7]={2,0},
+  [8]={0,2},  [9]={0,2},  [10]={0,2}, [11]={0,2},
+  [12]={-2,0},[13]={-2,0},[14]={-2,0},[15]={-2,0},
 }
 
 local get_corpse_position = function(entity)
@@ -93,7 +93,11 @@ function supply_depot:update_contents()
   end
 
   if not new_contents then
-    new_contents = self.entity.get_output_inventory().get_contents()
+    local raw = self.entity.get_output_inventory().get_contents()
+    new_contents = {}
+    for _, item in pairs(raw) do
+      new_contents[item.name] = (new_contents[item.name] or 0) + item.count
+    end
   end
 
   for name, count in pairs (self.old_contents) do

@@ -3,10 +3,10 @@ local network_reader = {}
 network_reader.metatable = {__index = network_reader}
 network_reader.corpse_offsets =
 {
-  [0] = {0, 1},
-  [2] = {-1, 0},
-  [4] = {0, -1},
-  [6] = {1, 0},
+  [0]={0,1},   [1]={0,1},   [2]={0,1},   [3]={0,1},
+  [4]={-1,0},  [5]={-1,0},  [6]={-1,0},  [7]={-1,0},
+  [8]={0,-1},  [9]={0,-1},  [10]={0,-1}, [11]={0,-1},
+  [12]={1,0},  [13]={1,0},  [14]={1,0},  [15]={1,0},
 }
 
 local get_corpse_position = function(entity)

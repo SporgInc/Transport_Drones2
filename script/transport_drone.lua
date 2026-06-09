@@ -18,7 +18,7 @@ local get_fuel_fluid = function()
   if fuel_fluid then
     return fuel_fluid
   end
-  fuel_fluid = game.recipe_prototypes["fuel-depots"].products[1].name
+  fuel_fluid = prototypes.recipe["fuel-depots"].products[1].name
   return fuel_fluid
 end
 
@@ -74,7 +74,7 @@ local is_special_drone = function(name)
   if bool ~= nil then
     return bool
   end
-  bool = game.entity_prototypes["transport-drone-"..name.."-1"] ~= nil
+  bool = prototypes.entity["transport-drone-"..name.."-1"] ~= nil
   is_drone_cache[name] = bool
   return bool
 end
@@ -397,7 +397,7 @@ local is_valid_item = function(item_name)
   if bool ~= nil then
     return bool
   end
-  valid_item_cache[item_name] = game.item_prototypes[item_name] ~= nil
+  valid_item_cache[item_name] = prototypes.item[item_name] ~= nil
   return valid_item_cache[item_name]
 end
 
@@ -407,7 +407,7 @@ local is_valid_fluid = function(fluid_name)
   if bool ~= nil then
     return bool
   end
-  valid_fluid_cache[fluid_name] = game.fluid_prototypes[fluid_name] ~= nil
+  valid_fluid_cache[fluid_name] = prototypes.fluid[fluid_name] ~= nil
   return valid_fluid_cache[fluid_name]
 end
 
@@ -415,12 +415,12 @@ function transport_drone:update_sticker()
 
 
   if self.background_rendering then
-    rendering.destroy(self.background_rendering)
+    self.background_rendering:destroy()
     self.background_rendering = nil
   end
 
   if self.item_rendering then
-    rendering.destroy(self.item_rendering)
+    self.item_rendering:destroy()
     self.item_rendering = nil
   end
 
@@ -556,11 +556,6 @@ function transport_drone:refund_fuel()
   local age = game.tick - (self.tick_created or game.tick - 1)
   local consumption = age * self.entity.speed * fuel_consumption_per_meter
 
-  local pollution = (age / 60) * drone_pollution_per_second
-  game.pollution_statistics.on_flow("transport-drone-1", pollution)
-
-  --self:say(consumption)
-  self.entity.force.fluid_production_statistics.on_flow(get_fuel_fluid(), -consumption)
   local fuel_refund = fuel_amount_per_drone - consumption
   --self:say(fuel_refund)
 
@@ -790,8 +785,8 @@ end
 
 local floor = math.floor
 local to_direction = function(orientation)
-  local direction = floor(8 * (orientation + (1 / 16)))
-  if direction >= 8 then direction = 0 end
+  local direction = floor(16 * (orientation + (1 / 32)))
+  if direction >= 16 then direction = 0 end
   return direction
 end
 
@@ -836,12 +831,6 @@ local on_tick = function(event)
   end
 end
 
-local set_map_settings = function()
-  game.map_settings.path_finder.max_steps_worked_per_tick = 10000
-  game.map_settings.path_finder.max_work_done_per_tick = 80000
-  game.map_settings.path_finder.use_path_cache = false
-end
-
 transport_drone.events =
 {
   --[defines.events.on_built_entity] = on_built_entity,
@@ -862,15 +851,14 @@ transport_drone.events =
 }
 
 transport_drone.on_load = function()
-  script_data = global.transport_drone or script_data
+  script_data = storage.transport_drone or script_data
   for unit_number, drone in pairs (script_data.drones) do
     setmetatable(drone, transport_drone.metatable)
   end
 end
 
 transport_drone.on_init = function()
-  global.transport_drone = global.transport_drone or script_data
-  set_map_settings()
+  storage.transport_drone = storage.transport_drone or script_data
 end
 
 transport_drone.on_configuration_changed = function()
@@ -891,11 +879,10 @@ transport_drone.on_configuration_changed = function()
     end
   end
 
-  set_map_settings()
-
 end
 
 transport_drone.get_drone = get_drone
+transport_drone.to_direction = to_direction
 
 transport_drone.get_drone_count = function()
   return table_size(script_data.drones)

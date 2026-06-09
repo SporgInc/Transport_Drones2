@@ -5,7 +5,7 @@ return
     layers =
     {
       {
-        filename = "__Transport_Drones__/data/entities/transport_depot_circuits/depot-writer.png",
+        filename = "__Transport_Drones2__/data/entities/transport_depot_circuits/depot-writer.png",
         frame_count = 1,
         height = 102,
         priority = "high",
@@ -21,7 +21,7 @@ return
       },
       {
         draw_as_shadow = true,
-        filename = "__base__/graphics/entity/combinator/hr-constant-combinator-shadow.png",
+        filename = "__Transport_Drones2__/data/entities/transport_depot_circuits/hr-constant-combinator-shadow.png",
         frame_count = 1,
         height = 66,
         priority = "high",
@@ -42,7 +42,7 @@ return
     layers =
     {
       {
-        filename = "__Transport_Drones__/data/entities/transport_depot_circuits/depot-writer.png",
+        filename = "__Transport_Drones2__/data/entities/transport_depot_circuits/depot-writer.png",
         frame_count = 1,
         height = 102,
         priority = "high",
@@ -58,7 +58,7 @@ return
       },
       {
         draw_as_shadow = true,
-        filename = "__base__/graphics/entity/combinator/hr-constant-combinator-shadow.png",
+        filename = "__Transport_Drones2__/data/entities/transport_depot_circuits/hr-constant-combinator-shadow.png",
         frame_count = 1,
         height = 66,
         priority = "high",
@@ -79,7 +79,7 @@ return
     layers =
     {
       {
-        filename = "__Transport_Drones__/data/entities/transport_depot_circuits/depot-writer.png",
+        filename = "__Transport_Drones2__/data/entities/transport_depot_circuits/depot-writer.png",
         frame_count = 1,
         height = 102,
         priority = "high",
@@ -95,7 +95,7 @@ return
       },
       {
         draw_as_shadow = true,
-        filename = "__base__/graphics/entity/combinator/hr-constant-combinator-shadow.png",
+        filename = "__Transport_Drones2__/data/entities/transport_depot_circuits/hr-constant-combinator-shadow.png",
         frame_count = 1,
         height = 66,
         priority = "high",
@@ -116,7 +116,7 @@ return
     layers =
     {
       {
-        filename = "__Transport_Drones__/data/entities/transport_depot_circuits/depot-writer.png",
+        filename = "__Transport_Drones2__/data/entities/transport_depot_circuits/depot-writer.png",
         frame_count = 1,
         height = 102,
         priority = "high",
@@ -132,7 +132,7 @@ return
       },
       {
         draw_as_shadow = true,
-        filename = "__base__/graphics/entity/combinator/hr-constant-combinator-shadow.png",
+        filename = "__Transport_Drones2__/data/entities/transport_depot_circuits/hr-constant-combinator-shadow.png",
         frame_count = 1,
         height = 66,
         priority = "high",

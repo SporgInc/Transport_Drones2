@@ -1,4 +1,26 @@
 ---------------------------------------------------------------------------------------------------
+Version: 1.0.18
+Date: 2026-06-09
+  Changes:
+    - Fixed fluid-depot load error: PipeConnectionDefinition.type renamed to flow_direction in Factorio 2.0 (applied to all pipe connections in transport_depot.lua).
+    - Migrated fluid-depot prototype from furnace to storage-tank, eliminating crafting-machine API surface that caused repeated breakage across Factorio updates.
+    - Removed fluid-depot auto-recipe system (transport-fluid-request category and per-fluid furnace recipes); storage-tank handles any fluid natively.
+    - Simplified fluid_depot:update() by removing crafting-machine active/crafting_progress hacks.
+    - Fixed pipe connection positions for request-depot, supply-depot and fuel-depot: Factorio 2.0 requires positions to be inside the entity bounding box.
+    - Note: existing fluid-depot entities in saves will be invalidated by this type change and must be re-placed.
+---------------------------------------------------------------------------------------------------
+Version: 1.0.17
+Date: 2026-06-08
+  Changes:
+    - Factorio 2.0 migration: global -> storage, game.*_prototypes -> prototypes.*, rendering API updated.
+    - Removed game.map_settings pathfinder tuning (removed in 2.0; defaults are sufficient).
+    - Removed pollution and fluid production statistics calls (removed in 2.0; prototype emissions still apply).
+    - Stripped Space Exploration compatibility code (replaced by Space Age DLC).
+    - Removed deprecated collision mask flags (colliding-with-tiles-only, consider-tile-transitions).
+    - Fixed recipe ingredient/result shorthand format (removed in 2.0).
+    - Removed icon_mipmaps from unit prototypes (auto-generated in 2.0).
+    - Updated emissions_per_second format for unit prototypes.
+---------------------------------------------------------------------------------------------------
 Version: 1.0.16
 Date: 2024-01-07
   Changes:

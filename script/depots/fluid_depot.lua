@@ -3,10 +3,10 @@ local fluid_depot = {}
 fluid_depot.metatable = {__index = fluid_depot}
 fluid_depot.corpse_offsets =
 {
-  [0] = {0, -2},
-  [2] = {2, 0},
-  [4] = {0, 2},
-  [6] = {-2, 0},
+  [0]={0,-2}, [1]={0,-2}, [2]={0,-2}, [3]={0,-2},
+  [4]={2,0},  [5]={2,0},  [6]={2,0},  [7]={2,0},
+  [8]={0,2},  [9]={0,2},  [10]={0,2}, [11]={0,2},
+  [12]={-2,0},[13]={-2,0},[14]={-2,0},[15]={-2,0},
 }
 
 local get_corpse_position = function(entity)
@@ -141,20 +141,9 @@ function fluid_depot:update()
   if not self.network_id then return end
 
   local box = self:get_output_fluidbox()
-  if not box then
-    if not self.entity.active then
-      self.entity.active = true
-      self.entity.crafting_progress = 0
-    end
-    return
-  end
-
-  if self.entity.active then
-    self.entity.active = false
-  end
+  if not box then return end
 
   self:update_contents()
-  --self:say("U")
 
 end
 

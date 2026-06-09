@@ -1,29 +1,8 @@
 local affected_by_tiles = true
 
-local util = require "__Transport_Drones__/data/tf_util/tf_util"
+local util = require "__Transport_Drones2__/data/tf_util/tf_util"
 
-local fuel = settings.startup["fuel-fluid"].value
-if not data.raw.fluid[fuel] then
-  log("Bad name for fuel fluid. reverting to something else...")
-
-  fuel = "petroleum-gas"
-  if not data.raw.fluid[fuel] then
-    fuel = nil
-    for k, fluid in pairs (data.raw.fluid) do
-      if fluid.fuel_value then
-        fuel = fluid.name
-        break
-      end
-    end
-  end
-
-  if not fuel then
-    local index, fluid = next(data.raw.fluid)
-    if fluid then
-      fuel = fluid.name
-    end
-  end
-end
+local fuel = "steam"
 
 local shared = require("shared")
 
@@ -31,8 +10,6 @@ local name = "transport-drone"
 
 
 local transport_drone_flags = {"placeable-off-grid", "not-in-kill-statistics"}
-local sprite_base = util.copy(data.raw.car.tank)
-
 local empty_truck = function(shift)
   assert(shift)
   return
@@ -290,7 +267,6 @@ local make_unit = function(k)
     localised_name = {name},
     icon = util.path("data/entities/transport_drone/transport-drone-icon.png"),
     icon_size = 112,
-    icon_mipmaps = 0,
     flags = transport_drone_flags,
     map_color = {b = 0.5, g = 1},
     enemy_map_color = {r = 1},
@@ -358,7 +334,7 @@ local make_unit = function(k)
     not_controllable = true,
     movement_speed = 0.15,
     distance_per_frame = 0.15,
-    pollution_to_join_attack = 1000,
+    absorptions_to_join_attack = {pollution = 1000},
     rotation_speed = 1 / (60 * 1 + (math.random() / 20)),
     --corpse = name.." Corpse",
     dying_explosion = "explosion",
@@ -390,16 +366,10 @@ local make_unit = function(k)
       }
     },
     vehicle_impact_sound =  { filename = "__base__/sound/car-metal-impact.ogg", volume = 0.65 },
-    working_sound =
-    {
-      sound = sprite_base.working_sound.sound,
-      max_sounds_per_type = 5,
-      audible_distance_modifier = 0.7
-    },
     --run_animation = empty_truck(shift),
     run_animation = full_truck(shift),
     affected_by_tiles = affected_by_tiles,
-    emissions_per_second = shared.drone_pollution_per_second
+    emissions_per_second = {pollution = shared.drone_pollution_per_second}
   }
   data:extend{unit}
 end
@@ -476,7 +446,6 @@ local make_ore_truck = function(resource, item_name)
       localised_name = {name},
       icon = util.path("data/entities/transport_drone/transport-drone-icon.png"),
       icon_size = 112,
-      icon_mipmaps = 0,
       flags = transport_drone_flags,
       map_color = {b = 0.5, g = 1},
       enemy_map_color = {r = 1},
@@ -544,7 +513,7 @@ local make_ore_truck = function(resource, item_name)
       not_controllable = true,
       movement_speed = 0.15,
       distance_per_frame = 0.15,
-      pollution_to_join_attack = 1000,
+      absorptions_to_join_attack = {pollution = 1000},
       rotation_speed = 1 / (60 * 1 + (math.random() / 20)),
       --corpse = name.." Corpse",
       dying_explosion = "explosion",
@@ -576,16 +545,10 @@ local make_ore_truck = function(resource, item_name)
         }
       },
       vehicle_impact_sound =  { filename = "__base__/sound/car-metal-impact.ogg", volume = 0.65 },
-      working_sound =
-      {
-        sound = sprite_base.working_sound.sound,
-        max_sounds_per_type = 5,
-        audible_distance_modifier = 0.7
-      },
       --run_animation = empty_truck(shift),
       run_animation = ore_truck(shift, color),
-    affected_by_tiles = affected_by_tiles,
-      emissions_per_second = shared.drone_pollution_per_second
+      affected_by_tiles = affected_by_tiles,
+      emissions_per_second = {pollution = shared.drone_pollution_per_second}
     }
     data:extend{unit}
 
@@ -634,7 +597,6 @@ local make_fluid_truck = function(fluid)
       localised_name = {name},
       icon = util.path("data/entities/transport_drone/transport-drone-icon.png"),
       icon_size = 112,
-      icon_mipmaps = 0,
       flags = transport_drone_flags,
       map_color = {b = 0.5, g = 1},
       enemy_map_color = {r = 1},
@@ -702,7 +664,7 @@ local make_fluid_truck = function(fluid)
       not_controllable = true,
       movement_speed = 0.15,
       distance_per_frame = 0.15,
-      pollution_to_join_attack = 1000,
+      absorptions_to_join_attack = {pollution = 1000},
       rotation_speed = 1 / (60 * 1 + (math.random() / 20)),
       --corpse = name.." Corpse",
       dying_explosion = "explosion",
@@ -734,16 +696,10 @@ local make_fluid_truck = function(fluid)
         }
       },
       vehicle_impact_sound =  { filename = "__base__/sound/car-metal-impact.ogg", volume = 0.65 },
-      working_sound =
-      {
-        sound = sprite_base.working_sound.sound,
-        max_sounds_per_type = 5,
-        audible_distance_modifier = 0.7
-      },
       --run_animation = fluid_truck(shift, {0,0,0, 0.5}),
       run_animation = fluid_truck(shift, color),
-    affected_by_tiles = affected_by_tiles,
-      emissions_per_second = shared.drone_pollution_per_second
+      affected_by_tiles = affected_by_tiles,
+      emissions_per_second = {pollution = shared.drone_pollution_per_second}
     }
     data:extend{unit}
 
@@ -767,7 +723,7 @@ local sprite_switch_hack_proxy =
   picture = util.empty_sprite(),
   flags = {"placeable-off-grid", "not-in-kill-statistics"},
   selectable_in_game = false,
-  collision_mask = {},
+  collision_mask = {layers = {}},
   max_health = 1
 }
 
@@ -803,7 +759,6 @@ local make_fuel_truck = function(fluid)
       localised_name = {name},
       icon = util.path("data/entities/transport_drone/transport-drone-icon.png"),
       icon_size = 112,
-      icon_mipmaps = 0,
       flags = transport_drone_flags,
       map_color = {b = 0.5, g = 1},
       enemy_map_color = {r = 1},
@@ -871,7 +826,7 @@ local make_fuel_truck = function(fluid)
       not_controllable = true,
       movement_speed = 0.15,
       distance_per_frame = 0.15,
-      pollution_to_join_attack = 1000,
+      absorptions_to_join_attack = {pollution = 1000},
       rotation_speed = 1 / (60 * 1 + (math.random() / 20)),
       --corpse = name.." Corpse",
       dying_explosion = "explosion",
@@ -903,15 +858,9 @@ local make_fuel_truck = function(fluid)
         }
       },
       vehicle_impact_sound =  { filename = "__base__/sound/car-metal-impact.ogg", volume = 0.65 },
-      working_sound =
-      {
-        sound = sprite_base.working_sound.sound,
-        max_sounds_per_type = 5,
-        audible_distance_modifier = 0.7
-      },
       run_animation = fluid_truck(shift, color),
-    affected_by_tiles = affected_by_tiles,
-      emissions_per_second = shared.drone_pollution_per_second
+      affected_by_tiles = affected_by_tiles,
+      emissions_per_second = {pollution = shared.drone_pollution_per_second}
     }
     data:extend{unit}
 
